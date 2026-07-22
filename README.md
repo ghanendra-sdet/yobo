@@ -32,3 +32,9 @@ Playwright, TypeScript, Postman, Jenkins CI/CD, Git, JIRA
 
 ## Screenshots & Reports
 Sample screenshots and test execution reports are available under [`test-reports/`](./test-reports) and [`bug-reports/`](./bug-reports).
+
+## Platform Context
+YOBO is one of several products built on a shared, company-wide platform layer (Auth, Role &
+Permission Service, Audit Logs, API Gateway, etc.) alongside Collection, Payout, Connected
+Banking, BBPS, and Reseller. See [`docs/shared-platform-services.md`](./docs/shared-platform-services.md)
+for how this product depends on those shared services and the testing implications of that.
