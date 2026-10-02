@@ -16,17 +16,21 @@ multiple banks/financial institutions and share a real-time, machine-readable vi
 with an app or lender they trust — **without YOBO itself ever seeing or storing the underlying
 financial data unencrypted**, and with every share governed by an explicit, revocable consent.
 
-## 2. Core Modules
+## 2. Core Modules and Their Submodules
 
-- **Account Discovery & Linking** — user finds and links their accounts across multiple banks/FIs
-- **Consent Management** — the user grants, views, and revokes data-sharing consent, scoped to a
-  specific purpose, data range, and duration
-- **Data Aggregation** — real-time fetch and consolidation of linked account data, per an active
-  consent
-- **Financial Data Dashboard** — the user's own consolidated view of their linked accounts
-- **Consent Revocation** — a user can revoke a previously granted consent at any time, immediately
-  stopping further data sharing
-- **Audit & Compliance** — every consent action and data-sharing event logged immutably
+| Module | Submodules / Key Components | Responsible For | Primarily Tested Via |
+|---|---|---|---|
+| **Account Discovery & Linking** | FIP Selection · Bank-Side Authentication Redirect · Linked-Account Registry | User finds and links accounts across multiple banks/FIs — see [`architecture-and-flow.md`](./architecture-and-flow.md) section 2 for why linking is deliberately separate from consenting | Functional Testing |
+| **Consent Management** | Consent Request Intake · Consent Artifact Construction (signed JSON) · Approval/Denial Handling | The user grants, views, and revokes data-sharing consent, scoped to a specific purpose, data range, and duration — see [`architecture-and-flow.md`](./architecture-and-flow.md) section 3 for the artifact's real field structure | API Testing |
+| **Data Aggregation** | Fetch Orchestration · Scope Enforcement | Real-time fetch and consolidation of linked account data, strictly per an active consent's approved scope | API Testing |
+| **Consent Revocation** | Immediate-Stop Enforcement · In-Flight-Fetch Interruption | A user can revoke a previously granted consent at any time — see [`architecture-and-flow.md`](./architecture-and-flow.md) section 4 for why this has to be re-checked at data handoff, not only at fetch initiation | API Testing + Negative Testing |
+| **Financial Data Dashboard** | Aggregated Account View | The user's own consolidated view of their linked accounts | UI Automation |
+| **Audit & Compliance** | Immutable Event Logging · Consent Artifact Retention (7 years, per RBI Master Direction) | Every consent action and data-sharing event logged immutably | Data-Level Testing |
+
+**Why Consent Revocation is its own module, not a state inside Consent Management:** per
+[`sample-defect-report.md`](../sample-defect-report.md) Defect #1, revocation isn't just "flip a
+status field" — it has to interrupt work already in progress, which is a materially different
+engineering problem (and test category) from granting or denying a brand-new request.
 
 ## 3. Key Roles in the AA Ecosystem (RBI Framework Terminology)
 
@@ -122,3 +126,7 @@ service list (Authorization/Role & Permission Service, Audit Logs, API Gateway, 
 | **Consent Artifact** | The structured record of exactly what was approved — purpose, data types, date range, duration |
 | **Data Flow** | The actual (encrypted) transfer of financial data from FIP to FIU, gated by an active consent |
 | **Consent Revocation** | A user-initiated action that immediately and permanently stops further data sharing under that consent |
+| **DEPA (Data Empowerment and Protection Architecture)** | The broader cross-sectoral data-sharing architecture this AA framework is the financial-sector layer of |
+| **Sahamati** | The Account Aggregator ecosystem's self-regulatory organization (SRO), recognized by RBI — develops the operational/technical standards AAs, FIPs, and FIUs interoperate against |
+| **ReBIT** | Reserve Bank Information Technology — the RBI arm that publishes the technical protocol every AA/FIP/FIU implements |
+| **Data Life After Fetch** | A field in the consent artifact itself constraining how long an FIU may *retain* data already delivered — a separate boundary from the consent's own active window (see [`architecture-and-flow.md`](./architecture-and-flow.md) section 3) |
