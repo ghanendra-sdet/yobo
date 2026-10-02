@@ -30,9 +30,13 @@
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
 
-> Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
-> [Architecture & Flow](./docs/architecture-and-flow.md), [Shared Platform Services](./docs/shared-platform-services.md),
-> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the full map.
+> Deeper dives not covered inline in this README: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
+> [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
+> [Full Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md),
+> [Shared Platform Services](./docs/shared-platform-services.md),
+> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the
+> full map. **Every diagram in this repo is drawn in Mermaid and renders natively right here on
+> GitHub — nothing requires visiting another site.**
 
 ---
 
@@ -94,10 +98,14 @@ integrity.
 | Category | Tools |
 |---|---|
 | **UI Automation** | Playwright, TypeScript |
-| **API Testing** | Playwright API requests, Postman |
+| **API Testing & Automation** | Playwright API requests, Postman |
+| **Performance Testing** | k6 (revocation-vs-in-flight-fetch race testing under concurrent load) |
 | **CI/CD** | Jenkins / GitHub Actions |
-| **Bug Tracking** | JIRA |
+| **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix — see [`sample-rtm.md`](./sample-rtm.md)) |
 | **Version Control** | Git, GitHub |
+
+> Full detail on *why* each tool was chosen, a skill → proof map, and the performance testing
+> approach in depth: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
 
 ---
 
@@ -108,6 +116,9 @@ integrity.
 - **API Testing** — consent artifact generation, data-fetch endpoints, revocation enforcement
 - **Negative Testing** — data fetch attempted after revocation/expiry, malformed consent scope
 - **Consent Flow & Data Sharing Validation** — the product's core trust guarantee
+- **Performance Testing** — the revocation-vs-in-flight-fetch race condition tested under
+  concurrent load with k6, not just a single isolated fetch (see
+  [`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5)
 - **Cross-Browser Testing**
 - **Smoke & Sanity Testing** — post-deployment health checks
 
@@ -115,33 +126,23 @@ integrity.
 
 ## 🔄 How It Works — Consent & Data-Sharing Flow
 
-```
-Account Linking (user authenticates directly with the Bank/FIP — YOBO never sees credentials)
-      │
-      ▼
-FIU requests data access (purpose, data types, date range, duration specified upfront)
-      │
-      ▼
-Consent Artifact presented to the user — fully explicit, nothing hidden
-      │
-      ├──▶ User Denies ──▶ REJECTED, no data flows
-      │
-      ▼
-User Approves ──▶ Consent ACTIVE
-      │
-      ▼
-Data fetched from the relevant FIP(s), strictly scoped to the approved range, delivered to the FIU
-      │
-      ├──▶ User Revokes (any time) ──▶ Data sharing stops IMMEDIATELY
-      │
-      └──▶ Duration Elapses ──▶ Data sharing stops AUTOMATICALLY
+```mermaid
+flowchart TD
+    A["Account Linking<br/>user authenticates directly with the Bank/FIP — YOBO never sees credentials"] --> B["FIU requests data access<br/>purpose, data types, date range, duration specified upfront"]
+    B --> C["Consent Artifact presented to the user — fully explicit, nothing hidden"]
+    C -->|User Denies| D["REJECTED — no data flows"]
+    C -->|User Approves| E["Consent ACTIVE"]
+    E --> F["Data fetched from the relevant FIP(s),<br/>strictly scoped to the approved range, delivered to the FIU"]
+    F -->|User Revokes, any time| G["Data sharing stops IMMEDIATELY"]
+    F -->|Duration Elapses| H["Data sharing stops AUTOMATICALLY"]
 ```
 
 **Key testing principle:** data must only ever flow for the exact scope, duration, and purpose
 explicitly approved, and must stop the instant consent is revoked or expires — the window between
 "user clicks Revoke" and "no further data flows" is this product's single most safety-critical
 test surface. See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for the full
-rationale.
+set of sequence diagrams, including exactly how a revocation-race defect actually happens under
+the hood.
 
 ### Admin Functions
 
@@ -167,7 +168,8 @@ rationale.
 ## 🤖 Automation Approach
 
 Automation is built with **Playwright + TypeScript**, covering the account-linking-to-revocation
-journey.
+journey, backed by Postman API coverage and k6 for revocation-race load testing (see
+[`docs/tech-and-skills.md`](./docs/tech-and-skills.md) section 5).
 
 ### Priority Automated Scenarios
 
@@ -176,6 +178,7 @@ journey.
 3. Consent revocation → immediate data-sharing stop
 4. Consent expiry → automatic data-sharing stop
 5. Cross-FIP consistency checks
+6. Revocation-vs-in-flight-fetch race testing under concurrent load (k6)
 
 See [`automation/`](./automation) for the framework README and a sample spec file using dummy
 data.
@@ -197,9 +200,9 @@ Full checklist with edge cases available in [`regression-checklist.md`](./regres
 
 ## 📸 Screenshots & Reports
 
-Sample test execution reports and defect report templates are available in
-[`regression-execution-summary.md`](./regression-execution-summary.md) and
-[`sample-defect-report.md`](./sample-defect-report.md).
+Sample test execution reports, defect report templates, and a worked Requirement Traceability
+Matrix are available in [`regression-execution-summary.md`](./regression-execution-summary.md),
+[`sample-defect-report.md`](./sample-defect-report.md), and [`sample-rtm.md`](./sample-rtm.md).
 
 ---
 
@@ -214,11 +217,14 @@ yobo/
 ├── README.md
 ├── regression-checklist.md          → Full regression suite + edge cases
 ├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
+├── sample-rtm.md                    → Worked Requirement Traceability Matrix, including real coverage gaps
 ├── regression-execution-summary.md  → Sample regression test execution report
 ├── docs/
 │   ├── README.md                    → 📍 Documentation map — start here
-│   ├── business-overview.md         → What an AA is, AA/FIP/FIU roles, consent lifecycle, stakeholders
-│   ├── architecture-and-flow.md     → Account linking + consent/data-sharing flow, revocation timing risk
+│   ├── business-overview.md         → What an AA is, modules/submodules, AA/FIP/FIU roles, consent lifecycle
+│   ├── architecture-and-flow.md     → Real Mermaid sequence/flow diagrams: linking, the consent artifact
+│   │                                    structure, the revocation-race mechanism behind Defect #1
+│   ├── tech-and-skills.md           → Full tech stack (with why), skill → proof map, CI/CD shape, performance depth
 │   ├── shared-platform-services.md  → Company-wide services this product depends on
 │   └── ui-consistency.md            → Cross-screen UI/UX consistency (consent status, formatting, a11y)
 └── automation/
