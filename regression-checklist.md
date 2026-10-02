@@ -28,6 +28,8 @@
 
 > Derived from [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) — the window
 > between revocation and data flow actually stopping is this product's highest-risk test surface.
+> See that doc's section 4 for this race condition shown as a sequence diagram, including the
+> exact mechanism behind `BUG-YOBO-3011` in [`sample-defect-report.md`](./sample-defect-report.md).
 
 | ID | Scenario | Steps | Expected Result |
 |---|---|---|---|

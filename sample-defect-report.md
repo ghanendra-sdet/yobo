@@ -30,7 +30,9 @@ be provably scoped to before the revocation instant.
 **Actual Result**
 The in-flight fetch completes and returns data to the FIU even though the consent was revoked
 before the fetch finished — the revocation check only runs at fetch *initiation*, not
-continuously through the fetch lifecycle.
+continuously through the fetch lifecycle. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 4 for this exact race
+condition shown as a sequence diagram.
 
 **Impact**
 Data is shared after a user explicitly revoked permission — a direct violation of the product's
@@ -66,7 +68,8 @@ timeout.
 **Actual Result**
 Both entries show a generic grey "Inactive" badge with no distinction, making it impossible for a
 user (or a compliance reviewer) to tell whether the user actively revoked access or simply let it
-lapse.
+lapse. See [`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) section 5 for why
+these are two genuinely different terminal states, not one.
 
 **Impact**
 Undermines the transparency guarantee at the heart of the AA model — a user reviewing their
