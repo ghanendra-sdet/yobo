@@ -2,7 +2,11 @@
 
 > Automated scenarios trace directly to [`../regression-checklist.md`](../regression-checklist.md)
 > sections 2–3 (consent lifecycle + revocation timing). See
-> [`../docs/README.md`](../docs/README.md) for the full documentation map.
+> [`../docs/README.md`](../docs/README.md) for the full documentation map,
+> [`../docs/architecture-and-flow.md`](../docs/architecture-and-flow.md) for the sequence diagrams
+> each scenario below is built to validate, and
+> [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5 for the full performance
+> testing approach for this domain.
 
 Automation for the account-linking-to-consent-revocation journey, built with **Playwright +
 TypeScript**.
@@ -24,10 +28,12 @@ automation/
 │   └── sample-consent-flow.spec.ts
 ├── fixtures/
 │   └── dummy-fip-data.ts
-└── pages/
-    ├── AccountLinkingPage.ts
-    ├── ConsentApprovalPage.ts
-    └── DashboardPage.ts
+├── pages/
+│   ├── AccountLinkingPage.ts
+│   ├── ConsentApprovalPage.ts
+│   └── DashboardPage.ts
+└── k6/
+    └── revocation-race-load.js   ← revocation-vs-in-flight-fetch race testing under concurrent load
 ```
 
 > This repo currently includes one representative sample (`sample-consent-flow.spec.ts`) rather
@@ -45,3 +51,5 @@ simulated dummy financial data — never real account credentials or real financ
 3. Consent revocation → immediate data-sharing stop
 4. Consent expiry → automatic data-sharing stop
 5. Cross-FIP consistency checks
+6. Revocation-vs-in-flight-fetch race testing under concurrent load (k6 — see
+   [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) section 5)
