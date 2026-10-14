@@ -95,7 +95,7 @@ Unlike most shared-platform-service dependencies (see
 **external FIP integrations** it doesn't control — each linked bank is effectively a live
 dependency whose uptime and data-format consistency directly determines whether a user's data
 fetch succeeds. This is conceptually similar to BBPS's dependency on biller integrations (see the
-[BBPS repository](https://github.com/ghanendra-sdet/bbps-bill-payment-platform)) — an
+<a href="https://github.com/ghanendra-sdet/bbps-bill-payment-platform" target="_blank" rel="noopener noreferrer">BBPS repository</a>) — an
 integration-quality risk largely outside the platform's own code, but still the platform's
 responsibility to handle gracefully.
 
@@ -112,7 +112,7 @@ service list (Authorization/Role & Permission Service, Audit Logs, API Gateway, 
   compliance
 - **AI Dispute Resolution Engine** — consent confusion, data-sharing disputes, and account-detail
   changes are ultimately routed to the shared
-  [AI Dispute Resolution Engine](https://github.com/ghanendra-sdet/ai-dispute-resolution-engine)
+  <a href="https://github.com/ghanendra-sdet/ai-dispute-resolution-engine" target="_blank" rel="noopener noreferrer">AI Dispute Resolution Engine</a>
   — see [`shared-platform-services.md`](./shared-platform-services.md) for how this ties together
   across products
 

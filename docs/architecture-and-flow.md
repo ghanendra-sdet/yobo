@@ -4,7 +4,7 @@
 > flow relies on, [`tech-and-skills.md`](./tech-and-skills.md) for the tools and skills behind
 > this testing approach, and [`README.md`](./README.md) for the full documentation map.
 >
-> Every diagram below is drawn in [Mermaid](https://mermaid.js.org/), which GitHub renders
+> Every diagram below is drawn in <a href="https://mermaid.js.org/" target="_blank" rel="noopener noreferrer">Mermaid</a>, which GitHub renders
 > natively in-page — nothing here requires opening another site or tool to read it.
 
 ## 1. System Architecture — Who Talks to Whom
@@ -160,7 +160,7 @@ revocation check would.
 
 Not every linked FIP returns data in a perfectly uniform shape or at the same latency. This is
 conceptually the same risk category as BBPS's biller-integration variability (see the
-[BBPS repository](https://github.com/ghanendra-sdet/bbps-bill-payment-platform)): a defect that
+<a href="https://github.com/ghanendra-sdet/bbps-bill-payment-platform" target="_blank" rel="noopener noreferrer">BBPS repository</a>): a defect that
 only manifests for accounts linked to specific FIPs, invisible if testing only ever uses one
 "reference" bank's dummy data — see [`regression-checklist.md`](../regression-checklist.md)
 section 4.
@@ -169,5 +169,5 @@ section 4.
 
 **Sources for the real-world regulatory framework referenced above** (used to ground this
 document's diagrams in the genuine RBI Account Aggregator ecosystem, not an invented one):
-[RBI Master Direction on NBFC-Account Aggregators & DEPA — HyperVerge](https://hyperverge.co/blog/account-aggregator-framework-rbi/),
-[Sahamati's recognition as AA ecosystem SRO & the consent artifact spec — Sahamati](https://sahamati.org.in/account-aggregator-key-resources/).
+<a href="https://hyperverge.co/blog/account-aggregator-framework-rbi/" target="_blank" rel="noopener noreferrer">RBI Master Direction on NBFC-Account Aggregators & DEPA — HyperVerge</a>,
+<a href="https://sahamati.org.in/account-aggregator-key-resources/" target="_blank" rel="noopener noreferrer">Sahamati's recognition as AA ecosystem SRO & the consent artifact spec — Sahamati</a>.
