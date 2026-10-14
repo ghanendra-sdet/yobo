@@ -29,6 +29,8 @@
 8. [Regression Checklist](#-regression-checklist)
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
+11. [Support & Dispute Resolution](#-support--dispute-resolution)
+12. [Platform Context](#-platform-context)
 
 > Deeper dives not covered inline in this README: [Modules, Submodules & Stakeholders](./docs/business-overview.md),
 > [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
@@ -240,7 +242,7 @@ yobo/
 ## 🤖 Support & Dispute Resolution
 
 YOBO issues (consent confusion, data-sharing disputes, account detail changes) are handled by the
-shared [AI Dispute Resolution Engine](https://github.com/ghanendra-sdet/ai-dispute-resolution-engine)
+shared <a href="https://github.com/ghanendra-sdet/ai-dispute-resolution-engine" target="_blank" rel="noopener noreferrer">AI Dispute Resolution Engine</a>
 — a single AI-powered support layer common across Collection, Payout, Connected Banking, BBPS,
 Reseller, and YOBO. It resolves ~80% of issues without human involvement, cutting average ticket
 resolution time from a 24–72 hour baseline to under 6 hours.
