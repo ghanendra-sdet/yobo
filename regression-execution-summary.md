@@ -7,11 +7,11 @@
 | Metric | Value |
 |---|---|
 | Test Cycle | Sample Release Regression |
-| Total Test Cases Executed | 44 |
-| Passed | 40 |
+| Total Test Cases Executed | 19 |
+| Passed | 16 |
 | Failed | 3 |
-| Blocked | 1 |
-| Pass Rate | 90.9% |
+| Blocked | 0 |
+| Pass Rate | 84.2% |
 
 ## Results by Area
 
